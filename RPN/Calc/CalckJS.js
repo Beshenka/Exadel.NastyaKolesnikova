@@ -1,34 +1,37 @@
 function inpitExp() {
-    var expression = document.querySelectorAll('#calculator span');
-    var operators = ['+', '-', 'x', '/', '^', '(', ')'];
+    var expression = document.querySelectorAll('#calculator span'); //Получили все элементы класса span
+    /*var operators = ['+', '-', 'x', '/', '^', '(', ')'];*/
+    var operators = ['+', '-', 'x', '/']
     var decimalAdded = false;
 
 
 for(var i = 0; i < expression.length; i++) {
 	expression[i].onclick = function(e) {
         
-		var input = document.querySelector('.screen');
-		var inputVal = input.innerHTML;
-		var btnVal = this.innerHTML;
+		var input = document.querySelector('.screen'); // Считали элементы с элемента с тегом screen и разметку
+		var inputVal = input.innerHTML; //достаём содержимое внутри тэга
+		var btnVal = this.innerHTML; //заносим содержимое кнопки которую мы нажали
 		
 
-		if(btnVal == 'C') {
+		if(btnVal === 'C') {
 			input.innerHTML = '';
 			decimalAdded = false;
 		}
 		
-		else if(btnVal == '=') {
+		else if(btnVal === '=') {
 			var equation = inputVal;
 			var lastChar = equation[equation.length - 1];
 			
 
-			equation = equation.replace(/x/g, '*').replace(/÷/g, '/');
+			equation = equation.replace(/x/g, '*').replace(/÷/g, '/'); // E_E
 			
-			if(operators.indexOf(lastChar) > -1 || lastChar == '.')
-				equation = equation.replace(/.$/, '');
+			/*if(operators.indexOf(lastChar) > -1 || lastChar === '.')
+				equation = equation.replace(/.$/, '');*/
 			
-			if(equation)
-				input.innerHTML = eval(equation);
+			if(equation){
+                input.innerHTML = rpnCount(rpn(equation)); //Шо такэ
+                
+            }
 				
 			decimalAdded = false;
 		}
@@ -49,15 +52,15 @@ for(var i = 0; i < expression.length; i++) {
 				input.innerHTML = inputVal.replace(/.$/, btnVal);
 			}
 			
-			decimalAdded =false;
+			decimalAdded = false;
 		}
 		
-		else if(btnVal == '.') {
+		/*else if(btnVal === '.') {
 			if(!decimalAdded) {
 				input.innerHTML += btnVal;
 				decimalAdded = true;
 			}
-		}
+		}*/
 		
 		else {
 			input.innerHTML += btnVal;
@@ -98,7 +101,7 @@ function rpn(expression) {
         if(isFinite(rpnExp[i]))
            str = str + rpnExp[i];
         
-        if(rpnExp[i] == '(')
+        if(rpnExp[i] === '(')
             stack.push(rpnExp[i]);
             
         else{
@@ -106,8 +109,8 @@ function rpn(expression) {
             priorit = priority.get(rpnExp[i]);
 
             if(t = stack.pop || t!= undefined){
-                if(rpnExp[i] == ')'){
-                    while(t != '(') 
+                if(rpnExp[i] === ')'){
+                    while(t !== '(') 
                         str = str + ' ' + t;
                     }
                 if( get(t) =< priorit) //???
@@ -138,7 +141,7 @@ function rpnCount(rpn){
     
   for(var i = 0; i < leng; i++){
     
-    if(str[i] == ' ')
+    if(str[i] === ' ')
         continue;
       
     if(typeof str[i] == number)
