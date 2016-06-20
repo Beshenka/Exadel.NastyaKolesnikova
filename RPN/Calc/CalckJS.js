@@ -28,7 +28,7 @@ for(var i = 0; i < expression.length; i++) {
 				equation = equation.replace(/.$/, '');*/
 			
 			if(equation){
-                input.innerHTML = rpnCount(rpn(equation)); //Шо такэ
+                input.innerHTML = rpnCount(rpn(equation)); 
                 
             }
 				
@@ -157,38 +157,43 @@ function rpnCount(rpn){
             switch(str[i]) {
                 
                 case '^': {
-                    str[i-2] = Math.pow(t2, t1);
-                    i= i-1;
-                    str = sdvig(str, i);
+                    //str[i-2] = Math.pow(t2, t1);
+                    //i= i-1;
+                    //str = sdvig(str, i);
+                    stack.push(Math.pow(t2, t1));
                     break;
                 //Можно сделать проверку    
                 }
         
                 case '*': {
-                    str[i-2] = t2 * t1;
-                    i= i-1;
-                    str = sdvig(str, i);
+                    //str[i-2] = t2 * t1;
+                    //i= i-1;
+                    //str = sdvig(str, i);
+                    stack.push(t2 * t1);
                     break;
                 }
                     
                 case '/': {
-                    str[i-2] = t2 / t1;
-                    i= i-1;
-                    str = sdvig(str, i);
+                    //str[i-2] = t2 / t1;
+                    //i= i-1;
+                    //str = sdvig(str, i);
+                    stack.push(t2 / t1);
                     break;
                 }
                     
                 case '+': {
-                    str[i-2] = t2 + t1;
-                    i= i-1;
-                    str = sdvig(str, i);
+                    //str[i-2] = t2 + t1;
+                    //i= i-1;
+                    //str = sdvig(str, i);
+                    stack.push(t2 + t1);
                     break;
                 }
                     
                 case '-': {
-                    str[i-2] = t2 - t1;
-                    i= i-1;
-                    str = sdvig(str, i);
+                    //str[i-2] = t2 - t1;
+                    //i= i-1;
+                    //str = sdvig(str, i);
+                    stack.push(t2 - t1);
                     break;
                     
                 } 
@@ -200,6 +205,7 @@ function rpnCount(rpn){
      }
 
   }
+    return stack.pop();
               
 }
 
