@@ -1,7 +1,6 @@
 function inpitExp() {
     var expression = document.querySelectorAll('#calculator span'); //Получили все элементы класса span
-    /*var operators = ['+', '-', 'x', '/', '^', '(', ')'];*/
-    var operators = ['+', '-', 'x', '/']
+    var operators = ['+', '-', 'x', '/', '^', '(', ')'];
     var decimalAdded = false;
 
 
@@ -84,19 +83,18 @@ function rpn(expression) {
         rpnExp = expression,
         leng = rpnExp.length,
         priorit = 0,
-        priority = {};
+        priority = new Map();
     
-    priority['^'] = 4;
-    priority['*'] = 3;
-    priority['/'] = 3;
-    priority['+'] = 2;
-    priority['-'] = 2;
-    priority['('] = 1;
-    priority[')'] = 1;
+    priority.set('^', 4);
+    priority.set('*', 3);
+    priority.set('/', 3);
+    priority.set('+', 2);
+    priority.set('-', 2);
+    priority.set('(', 1);
+    priority.set(')', 1);
     
         
     for (var i=0; i < leng; i++) {
-        
         
         if(isFinite(rpnExp[i]))
            str = str + rpnExp[i];
@@ -107,13 +105,14 @@ function rpn(expression) {
         else{
             
             priorit = priority.get(rpnExp[i]);
+             var t = stack.pop;
 
-            if(t = stack.pop || t!= undefined){
+            if(t!== undefined){
                 if(rpnExp[i] === ')'){
                     while(t !== '(') 
                         str = str + ' ' + t;
                     }
-                if( get(t) =< priorit) //???
+                if( priority.get(t) <= priorit) //???
                     str = str + ' ' + t;
                 else
                     stack.push(rpnExp[i]);
@@ -124,27 +123,29 @@ function rpn(expression) {
 
     }
     
-    while(t = stack.pop || t!= undefined)
+    t = stack.pop;
+    while(t!== undefined){
         str = str + ' ' + t;
+        t = stack.pop();
+    }
+    
+    return str;
    
 }    
 
-function get(k) {
-return priority[k];
-}
 
 function rpnCount(rpn){
 
-     stack = null;
-  var leng = str.length,
-       str = '';
+    var str = rpn,
+    stack = [],
+    leng = str.length;
     
   for(var i = 0; i < leng; i++){
     
     if(str[i] === ' ')
         continue;
       
-    if(typeof str[i] == number)
+    if(typeof str[i] == 'number')
             stack.push(str[i]);
        
     else{
@@ -153,12 +154,12 @@ function rpnCount(rpn){
         t2 = stack.pop();
         if(t1 == null || t2 == null){
          
-            switch(t): {
+            switch(str[i]) {
                 
                 case '^': {
                     str[i-2] = Math.pow(t2, t1);
                     i= i-1;
-                    sdvig(str, i);
+                    str = sdvig(str, i);
                     break;
                 //Можно сделать проверку    
                 }
@@ -166,25 +167,29 @@ function rpnCount(rpn){
                 case '*': {
                     str[i-2] = t2 * t1;
                     i= i-1;
-                    sdvig(str, i);
+                    str = sdvig(str, i);
+                    break;
                 }
                     
                 case '/': {
                     str[i-2] = t2 / t1;
                     i= i-1;
-                    sdvig(str, i);
+                    str = sdvig(str, i);
+                    break;
                 }
                     
                 case '+': {
                     str[i-2] = t2 + t1;
                     i= i-1;
-                    sdvig(str, i);
+                    str = sdvig(str, i);
+                    break;
                 }
                     
                 case '-': {
                     str[i-2] = t2 - t1;
                     i= i-1;
-                    sdvig(str, i);
+                    str = sdvig(str, i);
+                    break;
                     
                 } 
                 
@@ -198,10 +203,12 @@ function rpnCount(rpn){
               
 }
 
-function sdvig(str, i){
+function sdvig(str, i) {
     
-    for(var j = i; j < str.length; j++)
+    for(var j = i; j < str.length - 1; j++)
         str[j] = str[j+1];
+    return str;
          
 }
 
+inpitExp();
