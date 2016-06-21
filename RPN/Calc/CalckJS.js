@@ -1,7 +1,7 @@
 function inpitExp() {
     var expression = document.querySelectorAll('#calculator span'); //Получили все элементы класса span
     var operators = ['+', '-', 'x', '/', '^', '(', ')'];
-    var decimalAdded = false;
+   // var decimalAdded = false;
 
 
 for(var i = 0; i < expression.length; i++) {
@@ -14,7 +14,7 @@ for(var i = 0; i < expression.length; i++) {
 
 		if(btnVal === 'C') {
 			input.innerHTML = '';
-			decimalAdded = false;
+			//decimalAdded = false;
 		}
 		
 		else if(btnVal === '=') {
@@ -32,13 +32,13 @@ for(var i = 0; i < expression.length; i++) {
                 
             }
 				
-			decimalAdded = false;
+			//decimalAdded = false;
 		}
 		
 
-		else if(operators.indexOf(btnVal) > -1) {
+		else if(operators.indexOf(btnVal) > -1) { 
 
-			var lastChar = inputVal[inputVal.length - 1];
+			var lastChar = inputVal[inputVal.length - 1]; //Занесение  символов в поле #calculator span.
 			
 			if(inputVal != '' && operators.indexOf(lastChar) == -1) 
 				input.innerHTML += btnVal;
@@ -46,12 +46,12 @@ for(var i = 0; i < expression.length; i++) {
 			else if(inputVal == '' && btnVal == '-') 
 				input.innerHTML += btnVal;
 			
-			if(operators.indexOf(lastChar) > -1 && inputVal.length > 1) {
+			if(operators.indexOf(lastChar) > -1 && inputVal.length > 1) { 
 
 				input.innerHTML = inputVal.replace(/.$/, btnVal);
 			}
 			
-			decimalAdded = false;
+			//decimalAdded = false;
 		}
 		
 		/*else if(btnVal === '.') {
@@ -82,7 +82,6 @@ function rpn(expression) {
         str = '',
         rpnExp = expression,
         leng = rpnExp.length,
-        priorit = 0,
         priority = new Map();
     
     priority.set('^', 4);
@@ -96,48 +95,52 @@ function rpn(expression) {
         
     for (var i=0; i < leng; i++) {
         
-        if(isFinite(rpnExp[i]))
+        if(!!isNaN(rpnExp[i])) // ?????
            str = str + rpnExp[i];
         
         if(rpnExp[i] === '(')
             stack.push(rpnExp[i]);
             
-        else{
+        else if(priority.get(rpnExp[i])){
             
+            var t = 0,
             priorit = priority.get(rpnExp[i]);
-             var t = stack.pop;
 
-            if(t!== undefined){
+            if(stack != []) { //Проверка, возможно нужно изменить
+
                 if(rpnExp[i] === ')'){
-                    while(t !== '(') 
+                    do{
+                        t = stack.pop();
                         str = str + ' ' + t;
-                    }
+                        } while(t !== '(');
+                
                 if( priority.get(t) <= priorit) //???
                     str = str + ' ' + t;
                 else
                     stack.push(rpnExp[i]);
 
-            }
-            
-        }
+                }
 
-    }
+            }
+
+        }
     
-    t = stack.pop;
-    while(t!== undefined){
-        str = str + ' ' + t;
+    }  
+    
+    do {
         t = stack.pop();
-    }
+        str = str + ' ' + t;
+    } while(t);  
     
     return str;
-   
-}    
+}
 
 
 function rpnCount(rpn){
 
     var str = rpn,
     stack = [],
+   // stackAnsw = [],
     leng = str.length;
     
   for(var i = 0; i < leng; i++){
@@ -157,43 +160,43 @@ function rpnCount(rpn){
             switch(str[i]) {
                 
                 case '^': {
-                    //str[i-2] = Math.pow(t2, t1);
-                    //i= i-1;
-                    //str = sdvig(str, i);
-                    stack.push(Math.pow(t2, t1));
+                    str[i-2] = Math.pow(t2, t1);
+                    i= i-1;
+                    str = sdvig(str, i);
+                    //stackAnsw.push(Math.pow(t2, t1));
                     break;
                 //Можно сделать проверку    
                 }
         
                 case '*': {
-                    //str[i-2] = t2 * t1;
-                    //i= i-1;
-                    //str = sdvig(str, i);
-                    stack.push(t2 * t1);
+                    str[i-2] = t2 * t1;
+                    i= i-1;
+                    str = sdvig(str, i);
+                    //stackAnsw.push(t2 * t1);
                     break;
                 }
                     
                 case '/': {
-                    //str[i-2] = t2 / t1;
-                    //i= i-1;
-                    //str = sdvig(str, i);
-                    stack.push(t2 / t1);
+                    str[i-2] = t2 / t1;
+                    i= i-1;
+                    str = sdvig(str, i);
+                    //stackAnsw.push(t2 / t1);
                     break;
                 }
                     
                 case '+': {
-                    //str[i-2] = t2 + t1;
-                    //i= i-1;
-                    //str = sdvig(str, i);
-                    stack.push(t2 + t1);
+                    str[i-2] = t2 + t1;
+                    i= i-1;
+                    str = sdvig(str, i);
+                    //stackAnsw.push(t2 + t1);
                     break;
                 }
                     
                 case '-': {
-                    //str[i-2] = t2 - t1;
-                    //i= i-1;
-                    //str = sdvig(str, i);
-                    stack.push(t2 - t1);
+                    str[i-2] = t2 - t1;
+                    i= i-1;
+                    str = sdvig(str, i);
+                    //stackAnsw.push(t2 - t1);
                     break;
                     
                 } 
@@ -205,8 +208,8 @@ function rpnCount(rpn){
      }
 
   }
-    return stack.pop();
-              
+
+    return str;            
 }
 
 function sdvig(str, i) {
