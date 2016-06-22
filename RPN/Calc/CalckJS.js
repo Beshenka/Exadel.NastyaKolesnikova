@@ -28,8 +28,8 @@ for(var i = 0; i < expression.length; i++) {
 				equation = equation.replace(/.$/, '');*/
 			
 			if(equation){
-                input.innerHTML = rpnCount(rpn(equation)); 
-                
+                //input.innerHTML = rpnCount(rpn(equation));   
+                input.innerHTML = rpn(equation);
             }
 				
 			//decimalAdded = false;
@@ -95,13 +95,13 @@ function rpn(expression) {
         
     for (var i=0; i < leng; i++) {
         
-        if(!!isNaN(rpnExp[i])) // ?????
+        if(!isNaN(rpnExp[i])) // ?????
            str = str + rpnExp[i];
         
         if(rpnExp[i] === '(')
             stack.push(rpnExp[i]);
             
-        else if(priority.get(rpnExp[i])){
+        else {
             
             var t = 0,
             priorit = priority.get(rpnExp[i]);
@@ -160,42 +160,42 @@ function rpnCount(rpn){
             switch(str[i]) {
                 
                 case '^': {
-                    str[i-2] = Math.pow(t2, t1);
+                    /*str[i-2] = Math.pow(t2, t1);
                     i= i-1;
-                    str = sdvig(str, i);
+                    str = sdvig(str, i);*/
                     //stackAnsw.push(Math.pow(t2, t1));
                     break;
                 //Можно сделать проверку    
                 }
         
                 case '*': {
-                    str[i-2] = t2 * t1;
+                    /*str[i-2] = t2 * t1;
                     i= i-1;
-                    str = sdvig(str, i);
+                    str = sdvig(str, i);*/
                     //stackAnsw.push(t2 * t1);
                     break;
                 }
                     
                 case '/': {
-                    str[i-2] = t2 / t1;
+                    /*str[i-2] = t2 / t1;
                     i= i-1;
-                    str = sdvig(str, i);
+                    str = sdvig(str, i);*/
                     //stackAnsw.push(t2 / t1);
                     break;
                 }
                     
                 case '+': {
-                    str[i-2] = t2 + t1;
+                    /*str[i-2] = t2 + t1;
                     i= i-1;
-                    str = sdvig(str, i);
-                    //stackAnsw.push(t2 + t1);
+                    str = sdvig(str, i);*/
+                    stackAnsw.push(t2 + t1);
                     break;
                 }
                     
                 case '-': {
-                    str[i-2] = t2 - t1;
+                    /*str[i-2] = t2 - t1;
                     i= i-1;
-                    str = sdvig(str, i);
+                    str = sdvig(str, i);*/
                     //stackAnsw.push(t2 - t1);
                     break;
                     
