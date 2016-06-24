@@ -1,11 +1,22 @@
 /* Basic reset */
 * {
-	margin: 0;
-	padding: 0;
+	margin: 100;
+	padding: 100;
 	box-sizing: border-box;
 	
 	/* Better text styling */
 	font: bold 14px Arial, sans-serif;
+    text-align: center;
+}
+
+font {
+    
+    margin: 100px;
+	padding: 100px;
+    text-align: center;
+    font-family: FANTASY; 
+    
+    
 }
 
 /* Finally adding some IE9 fallbacks for gradients to finish things up */
@@ -13,9 +24,9 @@
 /* A nice BG gradient */
 html {
 	height: 100%;
-	background: white;
-	background: radial-gradient(circle, #fff 20%, #ccc);
-	background-size: cover;
+	background-size: 200px 200px;
+    background-image: url(Fon.jpg);
+    background-repeat: space;
 }
 
 /* Using box shadows to create 3D effects */
@@ -23,7 +34,7 @@ html {
 	width: 325px;
 	height: auto;
 	
-	margin: 100px auto;
+	margin: 50px auto;
 	padding: 20px 20px 9px;
 	
 	background: #9dd2ea;
@@ -34,7 +45,7 @@ html {
 
 /* Top portion */
 .top span.clear {
-	float: left;
+	float: center;
 }
 
 /* Inset shadow on the screen to create indent */
@@ -98,8 +109,8 @@ html {
 }
 
 .keys span.eval {
-	background: #f1ff92;
-	box-shadow: 0px 4px #9da853;
+	background: #FFF197
+	box-shadow: 0px 4px #EFE26D;
 	color: #888e5f;
 }
 
@@ -117,8 +128,8 @@ html {
 }
 
 .keys span.eval:hover {
-	background: #abb850;
-	box-shadow: 0px 4px #717a33;
+	background: #174278;
+	box-shadow: 0px 4px #0b2951;
 	color: #ffffff;
 }
 

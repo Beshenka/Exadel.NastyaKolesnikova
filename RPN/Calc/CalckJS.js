@@ -28,8 +28,7 @@ for(var i = 0; i < expression.length; i++) {
 				equation = equation.replace(/.$/, '');*/
 			
 			if(equation){
-                //input.innerHTML = rpnCount(rpn(equation));   
-                input.innerHTML = rpn(equation);
+                input.innerHTML = rpnCount(rpn(equation));   
             }
 				
 			//decimalAdded = false;
@@ -95,129 +94,120 @@ function rpn(expression) {
         
     for (var i=0; i < leng; i++) {
         
-        if(!isNaN(rpnExp[i])) // ?????
-           str = str + rpnExp[i];
-        
-        if(rpnExp[i] === '(')
-            stack.push(rpnExp[i]);
-            
-        else {
-            
-            var t = 0,
-            priorit = priority.get(rpnExp[i]);
-
-            if(stack != []) { //Проверка, возможно нужно изменить
-
-                if(rpnExp[i] === ')'){
-                    do{
-                        t = stack.pop();
-                        str = str + ' ' + t;
-                        } while(t !== '(');
-                
-                if( priority.get(t) <= priorit) //???
-                    str = str + ' ' + t;
-                else
-                    stack.push(rpnExp[i]);
-
-                }
-
-            }
-
+        if (!isNaN(rpnExp[i])) {
+            if (i > 0 && isNaN(rpnExp[i-1])) //если цифра, то нужно проверить прдыдущий символ в строке
+                str += ' '; //если цифра то пробел не нужен
+            str = str + rpnExp[i];
         }
+        else if (rpnExp[i] === '(') {
+            stack.push(rpnExp[i]);
+        }
+        else if (rpnExp[i] === ')') {
+            var t = stack.pop();
+            while (t !== '(') {
+                if (t === undefined) {
+                    str = "";
+                    break;//todo если стек закончился раньше чем встретилась открывающая скобка  тогда выражение записано неверно
+                }
+                str = str + ' ' + t;
+                t = stack.pop();
+            }
+        }
+        else {
+            var t = stack.pop();
+            while (t !== undefined && priority.get(t) >= priority.get(rpnExp[i])) {
+                str = str + ' ' + t;
+                t = stack.pop();
+            }
+            if (t !== undefined)
+                stack.push(t);
+            stack.push(rpnExp[i]);
+        }
+    } 
     
-    }  
-    
-    do {
-        t = stack.pop();
+    var t = stack.pop();
+    while(t){
         str = str + ' ' + t;
-    } while(t);  
+        t = stack.pop();
+    }
     
     return str;
 }
 
-
 function rpnCount(rpn){
 
-    var str = rpn,
+    var rpnExp = rpn,
     stack = [],
-   // stackAnsw = [],
-    leng = str.length;
+    leng = rpnExp.length,
+    t1 = 0,
+    t2 = 0;
+   // flag = leng;
     
   for(var i = 0; i < leng; i++){
     
-    if(str[i] === ' ')
+    if(rpnExp[i] == ' '){
+       // flag --;
         continue;
+    }
       
-    if(typeof str[i] == 'number')
-            stack.push(str[i]);
+    if(!isNaN(rpnExp[i])){
+        var str = '';
+       while(rpnExp[i] != ' '){
+           str = str + rpnExp[i++];
+       }
+        stack.push(str);
+        //flag ++;
+    }
+
        
     else{
         
         t1 = stack.pop();
         t2 = stack.pop();
-        if(t1 == null || t2 == null){
+        
+        if(t2 !== undefined ){
          
-            switch(str[i]) {
+            switch(rpnExp[i]) {
                 
                 case '^': {
-                    /*str[i-2] = Math.pow(t2, t1);
-                    i= i-1;
-                    str = sdvig(str, i);*/
-                    //stackAnsw.push(Math.pow(t2, t1));
-                    break;
-                //Можно сделать проверку    
+                    stack.push(Math.pow(t2, t1));
+                    //flag -= 2;
+                    break; 
                 }
         
                 case '*': {
-                    /*str[i-2] = t2 * t1;
-                    i= i-1;
-                    str = sdvig(str, i);*/
-                    //stackAnsw.push(t2 * t1);
+                    stack.push(t2 * t1);
+                    //flag -= 2;
                     break;
                 }
                     
                 case '/': {
-                    /*str[i-2] = t2 / t1;
-                    i= i-1;
-                    str = sdvig(str, i);*/
-                    //stackAnsw.push(t2 / t1);
+                    stack.push(t2 / t1);
+                    //flag -= 2;
                     break;
                 }
                     
                 case '+': {
-                    /*str[i-2] = t2 + t1;
-                    i= i-1;
-                    str = sdvig(str, i);*/
-                    stackAnsw.push(t2 + t1);
+                    stack.push(t2 + t1);
+                    //flag -= 2;
                     break;
                 }
                     
                 case '-': {
-                    /*str[i-2] = t2 - t1;
-                    i= i-1;
-                    str = sdvig(str, i);*/
-                    //stackAnsw.push(t2 - t1);
+                    stack.push(t2 - t1);
+                    //flag -= 2;
                     break;
-                    
                 } 
-                
             }
-            
-        }
-        
-     }
-
-  }
-
-    return str;            
-}
-
-function sdvig(str, i) {
+         }
+      }
+   } 
     
-    for(var j = i; j < str.length - 1; j++)
-        str[j] = str[j+1];
-    return str;
-         
+    if(stack.length > 1) {
+        return "error";
+    } else {
+        return stack.pop();    
+    }    
 }
 
 inpitExp();
