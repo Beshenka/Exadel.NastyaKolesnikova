@@ -1,7 +1,7 @@
 function inpitExp() {
     var expression = document.querySelectorAll('#calculator span'); //Получили все элементы класса span
-    var operators = ['+', '-', 'x', '/', '^', '(', ')'];
-   // var decimalAdded = false;
+    var operators = ['+', '-', '*', '/', '^', '(', ')'];
+   var decimalAdded = false;
 
 
 for(var i = 0; i < expression.length; i++) {
@@ -11,32 +11,31 @@ for(var i = 0; i < expression.length; i++) {
 		var inputVal = input.innerHTML; //достаём содержимое внутри тэга
 		var btnVal = this.innerHTML; //заносим содержимое кнопки которую мы нажали
 		
-
+        
 		if(btnVal === 'C') {
 			input.innerHTML = '';
-			//decimalAdded = false;
+			decimalAdded = false;
 		}
 		
 		else if(btnVal === '=') {
 			var equation = inputVal;
 			var lastChar = equation[equation.length - 1];
 			
-
+            
 			equation = equation.replace(/x/g, '*').replace(/÷/g, '/'); // E_E
 			
 			/*if(operators.indexOf(lastChar) > -1 || lastChar === '.')
 				equation = equation.replace(/.$/, '');*/
 			
 			if(equation){
-                input.innerHTML = rpnCount(rpn(equation));   
+                //input.innerHTML = rpnCount(rpn(equation));  
+                input.innerHTML = rpn(equation);  
             }
 				
-			//decimalAdded = false;
+			decimalAdded = false;
 		}
 		
-
 		else if(operators.indexOf(btnVal) > -1) { 
-
 			var lastChar = inputVal[inputVal.length - 1]; //Занесение  символов в поле #calculator span.
 			
 			if(inputVal != '' && operators.indexOf(lastChar) == -1) 
@@ -45,25 +44,28 @@ for(var i = 0; i < expression.length; i++) {
 			else if(inputVal == '' && btnVal == '-') 
 				input.innerHTML += btnVal;
 			
-			if(operators.indexOf(lastChar) > -1 && inputVal.length > 1) { 
-
+            
+            else if(operators.indexOf(lastChar) > -1 && inputVal.length > 1 && btnVal !== '(') { 
 				input.innerHTML = inputVal.replace(/.$/, btnVal);
 			}
 			
-			//decimalAdded = false;
+            else{
+                input.innerHTML += btnVal;
+            }
+			decimalAdded = false;
 		}
-		
-		/*else if(btnVal === '.') {
+        
+		else if(btnVal === '.') {
 			if(!decimalAdded) {
 				input.innerHTML += btnVal;
 				decimalAdded = true;
 			}
-		}*/
+		}
 		
 		else {
 			input.innerHTML += btnVal;
 		}
-		
+
 		e.preventDefault();
 	} 
 }
@@ -91,46 +93,49 @@ function rpn(expression) {
     priority.set('(', 1);
     priority.set(')', 1);
     
-        
+    
     for (var i=0; i < leng; i++) {
         
-        if (!isNaN(rpnExp[i])) {
-            if (i > 0 && isNaN(rpnExp[i-1])) //если цифра, то нужно проверить прдыдущий символ в строке
-                str += ' '; //если цифра то пробел не нужен
+        if (!isNaN(rpnExp[i]) || rpnExp[i] === '.') {
+            if (i > 0 && ((!isNaN(rpnExp[i]) || rpnExp[i] !== '.') && (rpnExp[i+1] !== '.' || rpnExp[i-1] !== '.')))
+                str += ' ';
+            
             str = str + rpnExp[i];
         }
+
         else if (rpnExp[i] === '(') {
             stack.push(rpnExp[i]);
         }
         else if (rpnExp[i] === ')') {
             var t = stack.pop();
-            while (t !== '(') {
+            while (t !== '(') { //Проблема со скобками!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
                 if (t === undefined) {
                     str = "";
-                    break;//todo если стек закончился раньше чем встретилась открывающая скобка  тогда выражение записано неверно
+                    break;
                 }
+                
                 str = str + ' ' + t;
                 t = stack.pop();
-            }
+            } 
         }
+
         else {
-            var t = stack.pop();
-            while (t !== undefined && priority.get(t) >= priority.get(rpnExp[i])) {
-                str = str + ' ' + t;
-                t = stack.pop();
+            var z = stack.pop();
+            while (z !== undefined && priority.get(z) >= priority.get(rpnExp[i])) {
+                str = str + ' ' + z;
+                z = stack.pop();
             }
-            if (t !== undefined)
-                stack.push(t);
+            if (z !== undefined)
+                stack.push(z);
             stack.push(rpnExp[i]);
         }
     } 
-    
-    var t = stack.pop();
-    while(t){
-        str = str + ' ' + t;
-        t = stack.pop();
+    //alert(str);
+    var q = stack.pop();
+    while(q){
+        str = str + ' ' + q;
+        q = stack.pop();
     }
-    
     return str;
 }
 
@@ -138,25 +143,21 @@ function rpnCount(rpn){
 
     var rpnExp = rpn,
     stack = [],
-    leng = rpnExp.length,
     t1 = 0,
-    t2 = 0;
-   // flag = leng;
+    t2 = 0,
+    leng = rpnExp.length;
     
   for(var i = 0; i < leng; i++){
     
-    if(rpnExp[i] == ' '){
-       // flag --;
+    if(rpnExp[i] == ' ')
         continue;
-    }
       
     if(!isNaN(rpnExp[i])){
-        var str = '';
+       var str = '';
        while(rpnExp[i] != ' '){
            str = str + rpnExp[i++];
        }
         stack.push(str);
-        //flag ++;
     }
 
        
@@ -165,37 +166,32 @@ function rpnCount(rpn){
         t1 = stack.pop();
         t2 = stack.pop();
         
-        if(t2 !== undefined ){
+        if(t2 !== undefined){
          
             switch(rpnExp[i]) {
                 
                 case '^': {
                     stack.push(Math.pow(t2, t1));
-                    //flag -= 2;
                     break; 
                 }
         
                 case '*': {
                     stack.push(t2 * t1);
-                    //flag -= 2;
                     break;
                 }
                     
                 case '/': {
                     stack.push(t2 / t1);
-                    //flag -= 2;
                     break;
                 }
                     
                 case '+': {
                     stack.push(t2 + t1);
-                    //flag -= 2;
                     break;
                 }
                     
                 case '-': {
                     stack.push(t2 - t1);
-                    //flag -= 2;
                     break;
                 } 
             }
@@ -209,5 +205,15 @@ function rpnCount(rpn){
         return stack.pop();    
     }    
 }
+
+/*function probel(str){
+    for(var i=0, i<str.length; i++){
+        if(str[i]= '.' && rpnExp[i+1] == ' ')
+            for(var j=i; j<str.length; j++)
+                str[j] = str[j+1];
+    }
+    
+    return str;
+}*/
 
 inpitExp();
