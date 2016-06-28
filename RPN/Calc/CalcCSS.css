@@ -19,9 +19,18 @@ font {
     
 }
 
-/* Finally adding some IE9 fallbacks for gradients to finish things up */
+.text {
+    
+    margin-top:  50px;
+    font: bold 25px "century gothic", sans-serif;
+    color: azure;
+    text-shadow:  1px 1px 2px #1B68D3, 0 0 1em #3A9DC1;
+    
+}
 
+/* Finally adding some IE9 fallbacks for gradients to finish things up */
 /* A nice BG gradient */
+
 html {
 	height: 100%;
 	background-size: 200px 200px;
@@ -109,8 +118,8 @@ html {
 }
 
 .keys span.eval {
-	background: #FFF197;
-	box-shadow: 0px 4px #EFE26D;
+	background: #FFFFE0;
+	box-shadow: 0px 4px #FFF197;
 	color: #888e5f;
 }
 
@@ -128,8 +137,8 @@ html {
 }
 
 .keys span.eval:hover {
-	background: #174278;
-	box-shadow: 0px 4px #0b2951;
+	background: #9c89f6;
+	box-shadow: 0px 4px #6b54d3;
 	color: #ffffff;
 }
 

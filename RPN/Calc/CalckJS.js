@@ -195,7 +195,8 @@ function rpnCount(rpn){
                 }
                     
                 case '+': {
-                    stack.push(t2 + t1);
+                    var t3 = parseFloat(t1)+parseFloat(t2);
+                    stack.push(t3);
                     break;
                 }
                     
@@ -215,14 +216,5 @@ function rpnCount(rpn){
     }    
 }
 
-/*function probel(str){
-    for(var i=0, i<str.length; i++){
-        if(str[i]= '.' && rpnExp[i+1] == ' ')
-            for(var j=i; j<str.length; j++)
-                str[j] = str[j+1];
-    }
-    
-    return str;
-}*/
 
 inpitExp();
