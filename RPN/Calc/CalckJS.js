@@ -1,6 +1,7 @@
+var operators = ['+', '-', '*', '/', '^', '(', ')'];
+
 function inpitExp() {
     var expression = document.querySelectorAll('#calculator span'); //Получили все элементы класса span
-    var operators = ['+', '-', '*', '/', '^', '(', ')'];
    var decimalAdded = false;
 
 
@@ -28,8 +29,8 @@ for(var i = 0; i < expression.length; i++) {
 				equation = equation.replace(/.$/, '');*/
 			
 			if(equation){
-                //input.innerHTML = rpnCount(rpn(equation));  
-                input.innerHTML = rpn(equation);  
+                input.innerHTML = rpnCount(rpn(equation));  
+                //input.innerHTML = rpn(equation);  
             }
 				
 			decimalAdded = false;
@@ -45,7 +46,7 @@ for(var i = 0; i < expression.length; i++) {
 				input.innerHTML += btnVal;
 			
             
-            else if(operators.indexOf(lastChar) > -1 && inputVal.length > 1 && btnVal !== '(') { 
+            else if(operators.indexOf(lastChar) > -1 && inputVal.length > 1 && operators.indexOf(btnVal) === -1) { 
 				input.innerHTML = inputVal.replace(/.$/, btnVal);
 			}
 			
@@ -93,22 +94,30 @@ function rpn(expression) {
     priority.set('(', 1);
     priority.set(')', 1);
     
-    
+
     for (var i=0; i < leng; i++) {
         
         if (!isNaN(rpnExp[i]) || rpnExp[i] === '.') {
-            if (i > 0 && ((!isNaN(rpnExp[i]) || rpnExp[i] !== '.') && (rpnExp[i+1] !== '.' || rpnExp[i-1] !== '.')))
+            str = str + rpnExp[i];
+            
+            if(!isNaN(rpnExp[i]) && operators.indexOf(rpnExp[i+1]) > -1)
                 str += ' ';
             
-            str = str + rpnExp[i];
+            else if(!isNaN(rpnExp[i+1]) && operators.indexOf(rpnExp[i]) > -1)
+                str += ' ';
+            
+            else if(!isNaN(rpnExp[i]) && rpnExp[i+1] == '(' || rpnExp[i+1] == ')')
+                str += ' ';
         }
 
         else if (rpnExp[i] === '(') {
+            str += ' ';
             stack.push(rpnExp[i]);
         }
         else if (rpnExp[i] === ')') {
+            str += ' ';
             var t = stack.pop();
-            while (t !== '(') { //Проблема со скобками!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+            while (t !== '(') { 
                 if (t === undefined) {
                     str = "";
                     break;
