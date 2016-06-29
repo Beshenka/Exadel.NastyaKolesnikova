@@ -5,9 +5,10 @@ function biblio(){
     var file = filehandle.ReadAll();/* Считывает */
     //var poisk = document.getElementById("folk");
     //var spisok = document.getElementById("tab_find");
-    var reg = /\r?\n/;
+    var reg = /\;||\,/;
     var str  = [];
-    var line  = [];
+    var lineLibrary  = [];
+    var error = [];
        
     var library = file.split(reg);
     while(!file.AtEndOfStream){ 
@@ -15,20 +16,27 @@ function biblio(){
     }
     
     for(var i = 0; i < str[i].length; i++){
-        
-        if(str.[i].length == 1){
-            for(var j=0; j<)
-            
-            
-            
-            
+        var flag = false;
+        if(str[i].length == 1){
+            lineLibrary += str[i][0];
+            for(var j=0; j < str.length; j++){
+                for(var k=0; j < str[j].length; k++){
+                    if(str[i][0] === str[j][k]){
+                        str[j].splice(k, 1); 
+                        i=0;
+                        flag = true;
+                    }
+                }
+                delete str[i];
+            }
+
         }
         
+        if(j == str.length-1 && flag == false){
+            error += str[i];
+            delete str[i];
+        }
     }
-    
-    
-    
-    
-    
+
 }
     
