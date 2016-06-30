@@ -1,5 +1,5 @@
 var operators = ['+', '-', '*', '/', '^', '(', ')'];
-var flag = false;
+var flag = false; //добавила
 function inpitExp() {
     var expression = document.querySelectorAll('#calculator span'),//Получили все элементы класса span
         decimalAdded = false;
@@ -86,10 +86,9 @@ function rpn(expression) {
         leng = rpnExp.length,
         priority = new Map();
     
-    if(rpnExp[0] == '-'){
+    if(rpnExp[0] == '-'){ //добавила
         rpnExp = rpnExp.slice(1);
         flag = true;
-        
     }
 
     priority.set('^', 4);
@@ -167,7 +166,7 @@ function rpnCount(rpn){
     if(rpnExp[i] == ' ')
         continue;
       
-    if(!isNaN(rpnExp[i])){
+    if(!isNaN(rpnExp[i])){   //здесь возникает проблема
        var str = '';
        while(rpnExp[i] != ' '){
            str = str + rpnExp[i++];
@@ -207,7 +206,7 @@ function rpnCount(rpn){
                 }
                     
                 case '-': {
-                     if (flag === true && stack.length == 0) {
+                     if (flag === true && stack.length == 0) { //добавила
                          t2 = parseFloat(t2)* -1;
                          flag = false;
                      }
