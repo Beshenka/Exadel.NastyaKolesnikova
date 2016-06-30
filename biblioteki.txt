@@ -1,0 +1,5 @@
+main: math, io, coolLib
+math: io, superCoolLib
+coolLib: superCoolLib
+io:
+superCoolLib:

@@ -1,8 +1,8 @@
 var operators = ['+', '-', '*', '/', '^', '(', ')'];
-
+var flag = false;
 function inpitExp() {
-    var expression = document.querySelectorAll('#calculator span'); //Получили все элементы класса span
-   var decimalAdded = false;
+    var expression = document.querySelectorAll('#calculator span'),//Получили все элементы класса span
+        decimalAdded = false;
 
 
 for(var i = 0; i < expression.length; i++) {
@@ -86,6 +86,12 @@ function rpn(expression) {
         leng = rpnExp.length,
         priority = new Map();
     
+    if(rpnExp[0] == '-'){
+        rpnExp = rpnExp.slice(1);
+        flag = true;
+        
+    }
+
     priority.set('^', 4);
     priority.set('*', 3);
     priority.set('/', 3);
@@ -155,7 +161,7 @@ function rpnCount(rpn){
     t1 = 0,
     t2 = 0,
     leng = rpnExp.length;
-    
+
   for(var i = 0; i < leng; i++){
     
     if(rpnExp[i] == ' ')
@@ -201,8 +207,13 @@ function rpnCount(rpn){
                 }
                     
                 case '-': {
-                    stack.push(t2 - t1);
-                    break;
+                     if (flag === true && stack.length == 0) {
+                         t2 = parseFloat(t2)* -1;
+                         flag = false;
+                     }
+                    
+                     stack.push(t2 - t1);
+                     break;
                 } 
             }
          }
