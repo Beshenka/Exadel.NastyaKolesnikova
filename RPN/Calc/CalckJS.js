@@ -1,5 +1,5 @@
 var operators = ['+', '-', '*', '/', '^', '(', ')'];
-var flag = false; //добавила
+var flag = false; 
 function inpitExp() {
     var expression = document.querySelectorAll('#calculator span'),//Получили все элементы класса span
         decimalAdded = false;
@@ -17,6 +17,7 @@ for(var i = 0; i < expression.length; i++) {
 			input.innerHTML = '';
 			decimalAdded = false;
 		}
+        
 		
 		else if(btnVal === '=') {
 			var equation = inputVal;
@@ -30,7 +31,6 @@ for(var i = 0; i < expression.length; i++) {
 			
 			if(equation){
                 input.innerHTML = rpnCount(rpn(equation));  
-                //input.innerHTML = rpn(equation);  
             }
 				
 			decimalAdded = false;
@@ -39,13 +39,17 @@ for(var i = 0; i < expression.length; i++) {
 		else if(operators.indexOf(btnVal) > -1) { 
 			var lastChar = inputVal[inputVal.length - 1]; //Занесение  символов в поле #calculator span.
 			
-			if(inputVal != '' && operators.indexOf(lastChar) == -1) 
+			if (inputVal != '' && operators.indexOf(lastChar) > -1) 
 				input.innerHTML += btnVal;
 			
 			else if(inputVal == '' && btnVal == '-') 
 				input.innerHTML += btnVal;
-			
             
+            /*else if(inputVal.length == 1 && (lastChar === 'x' || lastChar === '÷' || lastChar === '^' || lastChar === '+')){
+            input.innerHTML = input.innerHTML + '0' + btnVal;
+                 alert(input.innerHTML);
+            }*/
+
             else if(operators.indexOf(lastChar) > -1 && inputVal.length > 1 && operators.indexOf(btnVal) === -1) { 
 				input.innerHTML = inputVal.replace(/.$/, btnVal);
 			}
@@ -83,13 +87,14 @@ function rpn(expression) {
     var stack = [],
         str = '',
         rpnExp = expression,
-        leng = rpnExp.length,
         priority = new Map();
     
-    if(rpnExp[0] == '-'){ //добавила
+    if(rpnExp[0] == '-'){ 
         rpnExp = rpnExp.slice(1);
         flag = true;
     }
+    
+    var leng = rpnExp.length;
 
     priority.set('^', 4);
     priority.set('*', 3);
@@ -166,9 +171,9 @@ function rpnCount(rpn){
     if(rpnExp[i] == ' ')
         continue;
       
-    if(!isNaN(rpnExp[i])){   //здесь возникает проблема
+    if(!isNaN(rpnExp[i])){ 
        var str = '';
-       while(rpnExp[i] != ' '){
+       while(rpnExp[i] !== ' '){
            str = str + rpnExp[i++];
        }
         stack.push(str);
@@ -179,6 +184,11 @@ function rpnCount(rpn){
         
         t1 = stack.pop();
         t2 = stack.pop();
+        
+        if (flag == true && stack.length == 0) { //добавила
+            t2 = parseFloat(t2) * parseFloat(-1);
+            flag = false;
+         }
         
         if(t2 !== undefined){
          
@@ -206,11 +216,6 @@ function rpnCount(rpn){
                 }
                     
                 case '-': {
-                     if (flag === true && stack.length == 0) { //добавила
-                         t2 = parseFloat(t2)* -1;
-                         flag = false;
-                     }
-                    
                      stack.push(t2 - t1);
                      break;
                 } 
